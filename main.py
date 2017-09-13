@@ -41,7 +41,7 @@ def download_videos(url_lists) :
 
 def channels_list_by_channel_playlist(service):
     get_playlist_items = service.playlistItems().list(part='snippet,contentDetails',
-    maxResults=50,
+    maxResults=10,
     playlistId='your_playlist_ID').execute()
 
     url_lists = []
