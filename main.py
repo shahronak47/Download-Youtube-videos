@@ -1,5 +1,4 @@
 import pafy
-import pdb
 import yaml
 from googleapiclient.discovery import build
 
@@ -72,5 +71,4 @@ if __name__ == '__main__' :
     service = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
                     developerKey=DEVELOPER_KEY, cache_discovery=False)
     url_lists = channels_list_by_channel_playlist(service)
-    pdb.set_trace()
     download_videos(url_lists)
