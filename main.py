@@ -43,24 +43,19 @@ def collect_urls(get_playlist_items):
 
     return local_lists
 
-def channels_list_by_channel_playlist(service):
-    #Get the upload_id first
-    get_all_videos = service.channels().list(part='snippet,contentDetails',
-                                           id='channel_id').execute()
-    upload_id = get_all_videos['items'][0]['contentDetails']['relatedPlaylists']['uploads']
-
-    #Get all the videos uploaded by that id
+def channels_list_by_channel_playlist(service, playlist_id):
+    #Get all the videos uploaded by playlist id
     url_lists = []
     get_playlist_items = service.playlistItems().list(part='snippet,contentDetails',
                                                      maxResults=50,
-                                                     playlistId=upload_id).execute()
+                                                     playlistId=playlist_id).execute()
 
     url_lists.extend(collect_urls(get_playlist_items))
     #To get results from the next page get the next page token from each request
     while('nextPageToken' in get_playlist_items.keys()) :
         get_playlist_items = service.playlistItems().list(part='snippet,contentDetails',
                                                         maxResults=50,
-                                                        playlistId=upload_id,
+                                                        playlistId=playlist_id,
                                                         pageToken = get_playlist_items['nextPageToken']).execute()
 
         url_lists.extend(collect_urls(get_playlist_items))
@@ -70,5 +65,6 @@ def channels_list_by_channel_playlist(service):
 if __name__ == '__main__' :
     service = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
                     developerKey=DEVELOPER_KEY, cache_discovery=False)
-    url_lists = channels_list_by_channel_playlist(service)
+    playlist_id = "add_playlist_id_here"
+    url_lists = channels_list_by_channel_playlist(service, playlist_id)
     download_videos(url_lists)
